@@ -135,21 +135,9 @@ st.markdown("""
         margin-bottom: 8px !important;
         background: var(--card-bg) !important;
     }
-    .timetable-grid { background: var(--card-bg); border-radius:16px; padding:20px; box-shadow:0 4px 20px var(--shadow); }
-           [data-testid="stExpanderIcon"] { display: none !important; }
-    
-    /* यहाँ से नया जोड़ें */
-    [data-testid="stExpander"] summary { font-size: 0 !important; }
-    [data-testid="stExpander"] summary span { font-size: 16px !important; }
-    /* यहाँ तक */
 
-    .stExpander summary::before {
-        content: "➤";
-        font-size: 18px;
-        margin-right: 10px;
-        color: #764ba2;
-        vertical-align: middle;
-    }
+    .timetable-grid { background: var(--card-bg); border-radius:16px; padding:20px; box-shadow:0 4px 20px var(--shadow); }
+    .download-section { background:var(--info-bg); border-radius:14px; padding:18px; border:2px dashed var(--accent1); text-align:center; margin:15px 0; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -775,24 +763,21 @@ if st.session_state.get("selected_chapter") and st.session_state.get("selected_s
                         st.session_state.text_results = []
             
             if st.session_state.get("text_results"):
-                 for i, r in enumerate(st.session_state.text_results[:8], 1):
-                    clean_title = r.get('title','').replace("_arrow_right", "").strip()
-                    with st.expander(f"➤ {i}. {clean_title[:55]}..."):
-
+                for i, r in enumerate(st.session_state.text_results[:8], 1):
+                    with st.expander(f"{i}. {r.get('title','')[:65]}..."):
                         st.write(r.get('body','')[:300])
                         link = r.get('href','#')
                         st.markdown(f"[🔗 Full Article]({link})")
-                            
-                            # Download option
-                            content_text = f"Chapter: {chapter}\nSubject: {subj_name}\n\nTitle: {r.get('title','')}\n\n{r.get('body','')}\n\nSource: {link}"
-                            
-                            st.download_button(
-                                label="⬇ Save as TXT",
-                                data=content_text,
-                                file_name=f"{chapter.replace(' ', '_')}_{i}.txt",
-                                mime="text/plain",
-                                key=f"dl_{i}"
-                            )
+                        
+                        # Download option
+                        content_text = f"Chapter: {chapter}\nSubject: {subj_name}\n\nTitle: {r.get('title','')}\n\n{r.get('body','')}\n\nSource: {link}"
+                        st.download_button(
+                            label="⬇️ Save as TXT",
+                            data=content_text,
+                            file_name=f"{chapter.replace(' ','_')}_{i}.txt",
+                            mime="text/plain",
+                            key=f"dl_{i}"
+                        )
         
         with col2:
             st.markdown("### 🤖 AI Summary")
