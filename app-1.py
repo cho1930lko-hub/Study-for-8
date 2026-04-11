@@ -136,7 +136,13 @@ st.markdown("""
         background: var(--card-bg) !important;
     }
     .timetable-grid { background: var(--card-bg); border-radius:16px; padding:20px; box-shadow:0 4px 20px var(--shadow); }
-        [data-testid="stExpanderIcon"] { display: none !important; }
+           [data-testid="stExpanderIcon"] { display: none !important; }
+    
+    /* यहाँ से नया जोड़ें */
+    [data-testid="stExpander"] summary { font-size: 0 !important; }
+    [data-testid="stExpander"] summary span { font-size: 16px !important; }
+    /* यहाँ तक */
+
     .stExpander summary::before {
         content: "➤";
         font-size: 18px;
@@ -144,7 +150,6 @@ st.markdown("""
         color: #764ba2;
         vertical-align: middle;
     }
-
 </style>
 """, unsafe_allow_html=True)
 
