@@ -566,13 +566,15 @@ with st.sidebar:
         if groq_api_key:
             st.session_state.groq_key = groq_api_key
         st.info("💡 **Free Groq API**: console.groq.com/keys\nया Streamlit Secrets में डालो")
-    
+
     st.divider()
-    st.markdown("**📲 Telegram Channel**")
-    telegram_link = st.text_input("Telegram Channel Link", placeholder="https://t.me/yourchannel", value=st.session_state.get("telegram_link",""))
+    st.markdown("**📲 Telegram Channel** *(Optional)*")
+    st.caption("अगर आपका कोई Telegram channel है जहाँ students को notes share करते हो, तो उसका link यहाँ डालो। Download के बाद 'Share on Telegram' button से सीधे channel पर भेज सकते हो। नहीं है तो खाली छोड़ दो।")
+    telegram_link = st.text_input("Channel Link", placeholder="https://t.me/yourchannel", value=st.session_state.get("telegram_link",""), label_visibility="collapsed")
     if telegram_link:
         st.session_state.telegram_link = telegram_link
         st.success("✅ Linked!")
+    
     
     st.divider()
     st.markdown("**🌍 Search Region**")
@@ -740,25 +742,25 @@ if st.session_state.get("selected_chapter") and st.session_state.get("selected_s
                 if st.button("✨ Get AI Summary", key="ai_summary_btn"):
                     st.session_state.ai_summary = None
                     st.session_state.ai_summary_chapter = chapter
-                    with st.spinner("🤖 AI सोच रहा है..."):
+                    with st.spinner("🤖 AI is thinking..."):
                         try:
                             client = Groq(api_key=groq_api_key)
-                            prompt = f"""You are an expert ICSC Class 8 teacher in India.
+                            prompt = f"""You are an expert ICSC Class 8 English-medium teacher in India.
 Topic: {chapter}
 Subject: {subj_name.split(' ',1)[1]}
 
-Class 8 ICSC students के लिए Hindi + English mix में समझाओ:
+Write a clear, student-friendly study note ENTIRELY IN ENGLISH for Class 8 ICSC students:
 
-1. 📌 Key Concepts (4-5 points)
-2. 📚 Important Definitions (2-3, simple words में)
-3. 💡 याद रखने की Tricks / Mnemonics
-4. ⭐ ICSC Exam के लिए Most Important Points
-5. 📝 2-3 Sample Questions जो exam में आ सकते हैं
+1. 📌 Key Concepts (4-5 bullet points, simple language)
+2. 📚 Important Definitions (2-3 definitions, easy to understand)
+3. 💡 Memory Tips / Mnemonics (to remember easily)
+4. ⭐ Most Important Points for ICSC Exam
+5. 📝 2-3 Sample Exam Questions (with answers)
 
-Simple, clear और student-friendly रखो।"""
+IMPORTANT: Write everything in ENGLISH ONLY. Simple, clear, exam-focused."""
 
                             completion = client.chat.completions.create(
-                                model="llama-3.1-8b-instant",
+                                model="llama-3.3-70b-versatile",
                                 messages=[{"role": "user", "content": prompt}],
                                 temperature=0.7,
                                 max_tokens=1500
@@ -774,14 +776,67 @@ Simple, clear और student-friendly रखो।"""
                     f"<div class='info-box' style='white-space:pre-wrap;'>{st.session_state.ai_summary}</div>",
                     unsafe_allow_html=True
                 )
+
+                # ── Markdown → HTML converter ──
+                import re
+                def md_to_html(text):
+                    text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
+                    text = re.sub(r'\*(.+?)\*',     r'<em>\1</em>',         text)
+                    text = re.sub(r'^### (.+)$', r'<h3>\1</h3>', text, flags=re.MULTILINE)
+                    text = re.sub(r'^## (.+)$',  r'<h2>\1</h2>', text, flags=re.MULTILINE)
+                    text = re.sub(r'^# (.+)$',   r'<h1>\1</h1>', text, flags=re.MULTILINE)
+                    text = re.sub(r'^- (.+)$',   r'<li>\1</li>', text, flags=re.MULTILINE)
+                    text = re.sub(r'(<li>.*?</li>\n?)+', lambda m: f'<ul>{m.group()}</ul>', text, flags=re.DOTALL)
+                    text = text.replace('\n', '<br>')
+                    return text
+
+                html_body = md_to_html(st.session_state.ai_summary)
+                html_content = f"""<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{chapter} — AI Study Notes</title>
+    <style>
+        body {{ font-family: 'Segoe UI', Arial, sans-serif; max-width: 820px;
+                margin: 40px auto; padding: 30px; color: #333; line-height: 1.8; }}
+        h1, h2 {{ color: #667eea; }}
+        h3 {{ color: #764ba2; }}
+        ul {{ background: #f8f9ff; border-left: 4px solid #667eea;
+              padding: 10px 10px 10px 30px; border-radius: 0 8px 8px 0; }}
+        li {{ margin: 6px 0; }}
+        strong {{ color: #222; }}
+        em {{ color: #555; font-style: italic; }}
+        .header {{ background: linear-gradient(135deg,#667eea,#764ba2);
+                   color: white; padding: 22px 28px; border-radius: 14px; margin-bottom: 28px; }}
+        .header h1 {{ color: white; border: none; margin: 0; font-size: 1.6rem; }}
+        .header p  {{ margin: 6px 0 0 0; opacity: 0.85; font-size: 0.9rem; }}
+        .content {{ background: #fff; border: 1px solid #e8e8f0;
+                    border-radius: 12px; padding: 25px 30px; }}
+        .footer {{ margin-top: 30px; padding-top: 12px; border-top: 1px solid #ddd;
+                   color: #aaa; font-size: 0.78rem; text-align: center; }}
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📚 {chapter}</h1>
+        <p>Subject: {subj_name.split(' ',1)[1]} &nbsp;|&nbsp; ICSC Class 8 &nbsp;|&nbsp; La Martiniere Girls College</p>
+    </div>
+    <div class="content">{html_body}</div>
+    <div class="footer">
+        Generated by StudyMate AI &nbsp;|&nbsp; {datetime.now().strftime("%d %b %Y, %I:%M %p")}
+    </div>
+</body>
+</html>"""
+
                 st.download_button(
-                    "⬇️ Download AI Summary",
-                    data=st.session_state.ai_summary,
-                    file_name=f"AI_Summary_{chapter.replace(' ','_')}.txt",
-                    mime="text/plain",
+                    "⬇️ Download AI Summary (HTML — Formatted)",
+                    data=html_content,
+                    file_name=f"AI_Summary_{chapter.replace(' ','_')}.html",
+                    mime="text/html",
                     key="dl_ai_summary"
                 )
-            
+                st.caption("💡 File double-click करो → browser में खुलेगी | Bold, Italic, Colors सब सही दिखेंगे | Word में भी import हो सकती है")
+
             # Telegram Share
             if st.session_state.get("telegram_link"):
                 telegram_url = f"https://t.me/share/url?url={st.session_state.telegram_link}&text=Check out {chapter} notes!"
@@ -937,7 +992,7 @@ OUTPUT FORMAT — only a numbered list, nothing else:
 10. [question]"""
 
                             completion = client.chat.completions.create(
-                                model="llama-3.1-8b-instant",
+                                model="llama-3.3-70b-versatile",
                                 messages=[{"role": "user", "content": prompt}],
                                 temperature=0.95,
                                 max_tokens=1600
@@ -988,25 +1043,25 @@ OUTPUT FORMAT — only a numbered list, nothing else:
 
                 # ── Hints button ──
                 if groq_api_key:
-                    if st.button("💡 AI से Hints + Answers देखो", key="ai_hints_btn"):
+                    if st.button("💡 Show AI Hints + Step-by-Step Answers", key="ai_hints_btn"):
                         st.session_state.exercise_hints = None
-                        with st.spinner("AI hints + answers बना रहा है..."):
+                        with st.spinner("AI is solving step-by-step..."):
                             try:
                                 client = Groq(api_key=groq_api_key)
                                 q_text = "\n".join([f"Q{i+1}. {q}" for i, q in enumerate(questions)])
-                                hint_prompt = f"""ICSC Class 8 {subj_name.split(' ',1)[1]} teacher.
-Solve these numericals with step-by-step working:
+                                hint_prompt = f"""You are an ICSC Class 8 {subj_name.split(' ',1)[1]} teacher.
+Solve these numerical problems with clear step-by-step working. Write ENTIRELY IN ENGLISH.
 
 {q_text}
 
-Format for each:
+Format for each question:
 Q1. Formula: [formula used]
-   Working: [step by step]
-   Answer: [final answer with unit]
+    Working: [step by step calculation]
+    Answer: [final answer with unit]
 
-Be concise. Show all steps."""
+Be clear and concise. Show all steps. English only."""
                                 completion = client.chat.completions.create(
-                                    model="llama-3.1-8b-instant",
+                                    model="llama-3.3-70b-versatile",
                                     messages=[{"role": "user", "content": hint_prompt}],
                                     temperature=0.3,
                                     max_tokens=2000
