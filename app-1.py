@@ -493,17 +493,23 @@ with st.sidebar:
     """, unsafe_allow_html=True)
 
     st.header("⚙️ Settings")
-    
-    groq_api_key = st.text_input(
-        "🔑 Groq API Key",
-        type="password",
-        value=st.session_state.get("groq_key", ""),
-        help="Free key: https://console.groq.com/keys"
-    )
-    if groq_api_key:
-        st.session_state.groq_key = groq_api_key
-    
-    st.info("💡 **Free Groq API**: console.groq.com/keys\nllama-3.1-8b-instant model use होगा")
+
+    # ── Secrets से auto-load, नहीं तो sidebar input ──
+    _secret_key = st.secrets.get("GROQ_API_KEY", "") if hasattr(st, "secrets") else ""
+    if _secret_key:
+        groq_api_key = _secret_key
+        st.session_state.groq_key = _secret_key
+        st.success("🔐 API Key: Secrets से auto-load ✅")
+    else:
+        groq_api_key = st.text_input(
+            "🔑 Groq API Key",
+            type="password",
+            value=st.session_state.get("groq_key", ""),
+            help="Free key: https://console.groq.com/keys"
+        )
+        if groq_api_key:
+            st.session_state.groq_key = groq_api_key
+        st.info("💡 **Free Groq API**: console.groq.com/keys\nया Streamlit Secrets में डालो")
     
     st.divider()
     st.markdown("**📲 Telegram Channel**")
