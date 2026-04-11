@@ -785,13 +785,14 @@ if st.session_state.get("selected_chapter") and st.session_state.get("selected_s
                             
                             # Download option
                             content_text = f"Chapter: {chapter}\nSubject: {subj_name}\n\nTitle: {r.get('title','')}\n\n{r.get('body','')}\n\nSource: {link}"
+                            
                             st.download_button(
-                                label="⬇️ Save as TXT",
+                                label="⬇ Save as TXT",
                                 data=content_text,
-                                file_name=f"{chapter.replace(' ','_')}_{i}.txt",
-                            mime="text/plain",
-                            key=f"dl_{i}"
-                        )
+                                file_name=f"{chapter.replace(' ', '_')}_{i}.txt",
+                                mime="text/plain",
+                                key=f"dl_{i}"
+                            )
         
         with col2:
             st.markdown("### 🤖 AI Summary")
