@@ -764,13 +764,10 @@ if st.session_state.get("selected_chapter") and st.session_state.get("selected_s
             
             if st.session_state.get("text_results"):
                 for i, r in enumerate(st.session_state.text_results[:8], 1):
-                 title = clean_text(r.get('title',''))
-                 body = clean_text(r.get('body',''))
-                 link = r.get('href','#')
-    
-            with st.expander(f"{i}. {title[:65]}..."):
-                st.write(body[:300])
-                st.markdown(f"🔗 [Full Article]({link})")
+                    with st.expander(f"{i}. {r.get('title','')[:65]}..."):
+                        st.write(r.get('body','')[:300])
+                        link = r.get('href','#')
+                        st.markdown(f"[🔗 Full Article]({link})")
                         
                         # Download option
                         content_text = f"Chapter: {chapter}\nSubject: {subj_name}\n\nTitle: {r.get('title','')}\n\n{r.get('body','')}\n\nSource: {link}"
