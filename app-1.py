@@ -138,6 +138,8 @@ st.markdown("""
 
     .timetable-grid { background: var(--card-bg); border-radius:16px; padding:20px; box-shadow:0 4px 20px var(--shadow); }
     .download-section { background:var(--info-bg); border-radius:14px; padding:18px; border:2px dashed var(--accent1); text-align:center; margin:15px 0; }
+        summary { list-style-type: none !important; }
+    .stExpander svg { display: inline-block !important; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -764,7 +766,7 @@ if st.session_state.get("selected_chapter") and st.session_state.get("selected_s
             
             if st.session_state.get("text_results"):
                 for i, r in enumerate(st.session_state.text_results[:8], 1):
-                    with st.expander(f"{i}. {r.get('title','')[:65]}..."):
+                    with st.expander(f"{i}. {r.get('title','')[:55]}..."):
                         st.write(r.get('body','')[:300])
                         link = r.get('href','#')
                         st.markdown(f"[🔗 Full Article]({link})")
