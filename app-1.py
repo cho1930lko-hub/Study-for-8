@@ -159,6 +159,62 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 # ========================================
+# PASSWORD PROTECTION
+# ========================================
+def check_password():
+    """Returns True if password is correct"""
+    correct_password = st.secrets.get("APP_PASSWORD", "studymate123")
+
+    if st.session_state.get("authenticated"):
+        return True
+
+    # Login Screen
+    st.markdown("""
+    <div style='max-width:420px; margin:80px auto 0 auto;'>
+        <div style='background: linear-gradient(135deg,#667eea,#764ba2);
+                    border-radius:24px; padding:40px 35px; text-align:center;
+                    box-shadow: 0 20px 60px rgba(102,126,234,0.4);'>
+            <div style='font-size:3.5rem; margin-bottom:10px;'>🎓</div>
+            <h2 style='color:white; margin:0 0 5px 0; font-size:1.6rem;'>StudyMate Dashboard</h2>
+            <p style='color:rgba(255,255,255,0.8); font-size:0.9rem; margin:0 0 30px 0;'>
+                La Martiniere Girls College<br>ICSC Board • Class 8
+            </p>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
+    col1, col2, col3 = st.columns([1, 2, 1])
+    with col2:
+        st.markdown("<br>", unsafe_allow_html=True)
+        password_input = st.text_input(
+            "🔒 Password डालो",
+            type="password",
+            placeholder="अपना password यहाँ डालो...",
+            key="password_input"
+        )
+        login_btn = st.button("🚀 Login करो", use_container_width=True, type="primary")
+
+        if login_btn or (password_input and st.session_state.get("try_login")):
+            if password_input == correct_password:
+                st.session_state.authenticated = True
+                st.session_state.try_login = False
+                st.rerun()
+            elif password_input:
+                st.error("❌ गलत Password! दोबारा try करो।")
+                st.session_state.try_login = False
+
+        st.markdown("""
+        <div style='text-align:center; margin-top:20px; color:#888; font-size:0.8rem;'>
+            🔐 Only for authorized students
+        </div>
+        """, unsafe_allow_html=True)
+
+    return False
+
+if not check_password():
+    st.stop()
+
+# ========================================
 # DATA: ICSC Class 8 Chapters
 # ========================================
 SUBJECTS = {
@@ -527,6 +583,11 @@ with st.sidebar:
     if st.button("📅 Generate Study Timetable", use_container_width=True):
         st.session_state.show_timetable = True
 
+    st.divider()
+    if st.button("🔓 Logout", use_container_width=True):
+        st.session_state.authenticated = False
+        st.rerun()
+
 # ========================================
 # MAIN HEADER
 # ========================================
@@ -668,53 +729,58 @@ if st.session_state.get("selected_chapter") and st.session_state.get("selected_s
         
         with col2:
             st.markdown("### 🤖 AI Summary")
-            if groq_api_key and st.button("✨ Get AI Summary", key="ai_summary"):
-                with st.spinner("AI analysis..."):
-                    try:
-                        client = Groq(api_key=groq_api_key)
-                        context = ""
-                        if st.session_state.get("text_results"):
-                            context = "\n".join([f"{r.get('title','')}: {r.get('body','')[:200]}" 
-                                               for r in st.session_state.text_results[:5]])
-                        
-                        prompt = f"""You are an expert ICSC Class 8 teacher in India.
-Topic: {chapter} (Subject: {subj_name.split(' ',1)[1]})
 
-Give a student-friendly explanation:
-1. 📌 Key Concepts (3-4 bullet points)
-2. 📚 Important Definitions (2-3)
-3. 💡 Memory Tips / Tricks
-4. ⭐ Most Important Points for ICSC Exam
-5. 🔗 Best Free Resources (NCERT, PhysicsWallah, Vedantu etc.)
+            # Clear old summary if chapter changed
+            if st.session_state.get("ai_summary_chapter") != chapter:
+                st.session_state.ai_summary = None
 
-Context from web: {context[:800]}
+            if not groq_api_key:
+                st.warning("⚠️ Groq API Key नहीं मिली — Secrets check करो")
+            else:
+                if st.button("✨ Get AI Summary", key="ai_summary_btn"):
+                    st.session_state.ai_summary = None
+                    st.session_state.ai_summary_chapter = chapter
+                    with st.spinner("🤖 AI सोच रहा है..."):
+                        try:
+                            client = Groq(api_key=groq_api_key)
+                            prompt = f"""You are an expert ICSC Class 8 teacher in India.
+Topic: {chapter}
+Subject: {subj_name.split(' ',1)[1]}
 
-Keep it clear, simple and exam-focused for Class 8 students."""
-                        
-                        completion = client.chat.completions.create(
-                            model="llama-3.1-8b-instant",
-                            messages=[{"role": "user", "content": prompt}],
-                            temperature=0.6,
-                            max_tokens=1200
-                        )
-                        ai_text = completion.choices[0].message.content
-                        st.session_state.ai_summary = ai_text
-                    except Exception as e:
-                        st.error(f"AI Error: {e}")
-            
-            if st.session_state.get("ai_summary"):
-                st.markdown(f"""<div class='info-box'>{st.session_state.ai_summary}</div>""", unsafe_allow_html=True)
-                
-                # Download AI Summary
+Class 8 ICSC students के लिए Hindi + English mix में समझाओ:
+
+1. 📌 Key Concepts (4-5 points)
+2. 📚 Important Definitions (2-3, simple words में)
+3. 💡 याद रखने की Tricks / Mnemonics
+4. ⭐ ICSC Exam के लिए Most Important Points
+5. 📝 2-3 Sample Questions जो exam में आ सकते हैं
+
+Simple, clear और student-friendly रखो।"""
+
+                            completion = client.chat.completions.create(
+                                model="llama-3.1-8b-instant",
+                                messages=[{"role": "user", "content": prompt}],
+                                temperature=0.7,
+                                max_tokens=1500
+                            )
+                            st.session_state.ai_summary = completion.choices[0].message.content
+                            st.session_state.ai_summary_chapter = chapter
+                        except Exception as e:
+                            st.error(f"❌ Groq Error: {str(e)}")
+                            st.info("💡 API key सही है? console.groq.com/keys पर check करो")
+
+            if st.session_state.get("ai_summary") and st.session_state.get("ai_summary_chapter") == chapter:
+                st.markdown(
+                    f"<div class='info-box' style='white-space:pre-wrap;'>{st.session_state.ai_summary}</div>",
+                    unsafe_allow_html=True
+                )
                 st.download_button(
                     "⬇️ Download AI Summary",
                     data=st.session_state.ai_summary,
                     file_name=f"AI_Summary_{chapter.replace(' ','_')}.txt",
-                    mime="text/plain"
+                    mime="text/plain",
+                    key="dl_ai_summary"
                 )
-            
-            if not groq_api_key:
-                st.warning("⚠️ Sidebar में Groq API Key डालो → AI Summary मिलेगी")
             
             # Telegram Share
             if st.session_state.get("telegram_link"):
@@ -801,8 +867,7 @@ Keep it clear, simple and exam-focused for Class 8 students."""
     if subj_data["has_numericals"] and len(tabs) > 3:
         with tabs[3]:
             st.markdown(f"### 🧮 Practice Exercises — {chapter}")
-            st.markdown("**10 fresh questions** हर बार generate होंगे (same day में अलग-अलग questions)")
-            
+
             col_e1, col_e2 = st.columns(2)
             with col_e1:
                 level_choice = st.radio(
@@ -811,120 +876,188 @@ Keep it clear, simple and exam-focused for Class 8 students."""
                     key="exercise_level_radio"
                 )
                 level = "basic" if "Basic" in level_choice else "advanced"
-            
             with col_e2:
-                st.markdown(f"""<div class='info-box'>
-                    <b>📌 {subj_name.split(' ',1)[1]} — {chapter}</b><br>
-                    Level: {'Basic Practice' if level=='basic' else 'Advanced Challenge'}<br>
-                    Questions: 10 (Fresh every time)
-                </div>""", unsafe_allow_html=True)
-            
-            if st.button(f"🎲 Generate 10 Fresh Questions", key="gen_exercise", type="primary"):
-                with st.spinner("Questions generate हो रहे हैं..."):
-                    time.sleep(0.5)  # Small delay for randomness
-                    
-                    subj_short = subj_name.split()[1] if len(subj_name.split()) > 1 else subj_name
-                    
-                    if "Math" in subj_name or "math" in subj_name.lower():
-                        questions = generate_maths_questions(chapter, level)
+                gen_mode = st.radio(
+                    "Questions कैसे बनाएं?",
+                    ["🤖 AI से (Groq — Best Quality)", "⚡ Instant (Local Generator)"],
+                    key="gen_mode_radio"
+                )
+
+            st.markdown(f"""<div class='info-box'>
+                <b>📌 {subj_name.split(' ',1)[1]} — {chapter}</b> &nbsp;|&nbsp;
+                Level: <b>{'Basic' if level=='basic' else 'Advanced'}</b> &nbsp;|&nbsp;
+                हर बार 10 अलग-अलग fresh questions
+            </div>""", unsafe_allow_html=True)
+
+            if st.button("🎲 Generate 10 Fresh Questions", key="gen_exercise", type="primary"):
+                st.session_state.exercise_questions = []
+                st.session_state.exercise_chapter = chapter
+                st.session_state.exercise_level = level
+                st.session_state.exercise_timestamp = datetime.now().strftime("%H:%M:%S")
+                st.session_state.exercise_hints = None
+
+                def local_questions():
+                    if "Math" in subj_name:
+                        return generate_maths_questions(chapter, level)
                     elif "Physics" in subj_name:
-                        questions = generate_physics_questions(chapter, level)
-                    elif "Chemistry" in subj_name:
-                        questions = generate_chemistry_questions(chapter, level)
+                        return generate_physics_questions(chapter, level)
                     else:
-                        questions = generate_maths_questions(chapter, level)  # fallback
-                    
-                    # Add timestamp to ensure uniqueness tracking
-                    st.session_state.exercise_questions = questions
-                    st.session_state.exercise_chapter = chapter
-                    st.session_state.exercise_level = level
-                    st.session_state.exercise_timestamp = datetime.now().strftime("%H:%M:%S")
-            
-            if st.session_state.get("exercise_questions") and st.session_state.get("exercise_chapter") == chapter:
-                st.success(f"✅ Generated at {st.session_state.get('exercise_timestamp','')} — {'Basic' if level=='basic' else 'Advanced'} Level")
-                
-                # Display questions
-                exercise_text = f"Chapter: {chapter}\nSubject: {subj_name}\nLevel: {level.capitalize()}\nGenerated: {st.session_state.get('exercise_timestamp','')}\n\n"
-                exercise_text += "PRACTICE QUESTIONS\n" + "="*40 + "\n\n"
-                
-                for i, q in enumerate(st.session_state.exercise_questions, 1):
-                    st.markdown(f"""<div class='question-box'>
-                        <span class='q-number'>Q{i}.</span> {q}
-                    </div>""", unsafe_allow_html=True)
-                    exercise_text += f"Q{i}. {q}\n\n"
-                
-                exercise_text += "\n" + "="*40 + "\n[Space for answers below]\n"
-                for i in range(1, 11):
-                    exercise_text += f"\nQ{i}: _______________\n"
-                
-                st.divider()
-                
-                # Download & Share options
-                col_d1, col_d2, col_d3 = st.columns(3)
-                
-                with col_d1:
-                    st.download_button(
-                        label="⬇️ Download as TXT",
-                        data=exercise_text,
-                        file_name=f"{chapter.replace(' ','_')}_{level}_exercises.txt",
-                        mime="text/plain",
-                        use_container_width=True
-                    )
-                
-                with col_d2:
-                    # Create CSV format for Google Sheets
-                    csv_text = "Q No,Question,Answer\n"
-                    for i, q in enumerate(st.session_state.exercise_questions, 1):
-                        q_clean = q.replace('"','""').replace(',',';')
-                        csv_text += f'{i},"{q_clean}",""\n'
-                    
-                    st.download_button(
-                        label="📊 Download for Google Sheets",
-                        data=csv_text,
-                        file_name=f"{chapter.replace(' ','_')}_{level}.csv",
-                        mime="text/csv",
-                        use_container_width=True,
-                        help="CSV format → Google Sheets में import करो"
-                    )
-                
-                with col_d3:
-                    if st.session_state.get("telegram_link"):
-                        first_3_q = "\n".join([f"Q{i+1}. {q[:80]}..." for i,q in enumerate(st.session_state.exercise_questions[:3])])
-                        tg_msg = f"📚 {chapter} Practice Questions\n\n{first_3_q}\n\n...and 7 more! Full sheet downloaded ✅"
-                        tg_url = f"https://t.me/share/url?url={st.session_state.telegram_link}&text={tg_msg}"
-                        st.link_button("📲 Share on Telegram", tg_url, use_container_width=True)
-                    else:
-                        st.button("📲 Telegram (Set in Sidebar)", disabled=True, use_container_width=True)
-                
-                # AI Solutions hint
-                if groq_api_key and st.button("💡 Get AI Hints/Solutions", key="ai_hints"):
-                    with st.spinner("AI hints generate हो रहे हैं..."):
+                        return generate_chemistry_questions(chapter, level)
+
+                if "AI" in gen_mode and groq_api_key:
+                    with st.spinner("🤖 AI नए सवाल बना रहा है... (5-10 sec)"):
                         try:
                             client = Groq(api_key=groq_api_key)
-                            q_text = "\n".join([f"Q{i+1}. {q}" for i,q in enumerate(st.session_state.exercise_questions)])
-                            
-                            hint_prompt = f"""You are an expert ICSC Class 8 {subj_name.split(' ',1)[1]} teacher.
-Provide brief hints (not full solutions) for these questions so students can practice:
+                            level_desc = (
+                                "basic numerical problems (straightforward, one-step)"
+                                if level == "basic"
+                                else "advanced numerical problems (multi-step, challenging)"
+                            )
+                            prompt = f"""You are an expert ICSC Class 8 {subj_name.split(' ',1)[1]} teacher in India.
+
+Generate EXACTLY 10 {level_desc} for chapter: "{chapter}"
+
+STRICT RULES:
+- Every question MUST have specific numbers/values (e.g. 45N, ₹500, 20cm)
+- Numerical/calculation based only — NO theory questions
+- All 10 must be different from each other
+- ICSC Class 8 syllabus appropriate
+- Use proper units (m, cm, kg, N, ₹, Hz, mol, etc.)
+
+OUTPUT FORMAT — only a numbered list, nothing else:
+1. [question]
+2. [question]
+3. [question]
+4. [question]
+5. [question]
+6. [question]
+7. [question]
+8. [question]
+9. [question]
+10. [question]"""
+
+                            completion = client.chat.completions.create(
+                                model="llama-3.1-8b-instant",
+                                messages=[{"role": "user", "content": prompt}],
+                                temperature=0.95,
+                                max_tokens=1600
+                            )
+                            raw = completion.choices[0].message.content.strip()
+                            lines = [l.strip() for l in raw.split('\n') if l.strip()]
+                            questions = []
+                            for line in lines:
+                                if line and line[0].isdigit() and '.' in line[:3]:
+                                    q = line.split('.', 1)[1].strip()
+                                    if len(q) > 10:
+                                        questions.append(q)
+                            if len(questions) >= 5:
+                                st.session_state.exercise_questions = questions[:10]
+                            else:
+                                st.warning("⚠️ AI response ठीक नहीं आया — Local generator से दे रहे हैं")
+                                st.session_state.exercise_questions = local_questions()
+                        except Exception as e:
+                            st.error(f"❌ Groq Error: {str(e)}")
+                            st.session_state.exercise_questions = local_questions()
+                else:
+                    with st.spinner("⚡ Questions तैयार हो रहे हैं..."):
+                        time.sleep(0.3)
+                        st.session_state.exercise_questions = local_questions()
+
+            # ── Show Questions ──
+            if st.session_state.get("exercise_questions") and st.session_state.get("exercise_chapter") == chapter:
+                questions = st.session_state.exercise_questions
+                ts = st.session_state.get("exercise_timestamp", "")
+                lv = st.session_state.get("exercise_level", level)
+                st.success(f"✅ {len(questions)} Questions ready! [{lv.capitalize()} Level — {ts}]")
+
+                exercise_text = f"Chapter: {chapter}\nSubject: {subj_name}\nLevel: {lv.capitalize()}\nTime: {ts}\n\n"
+                exercise_text += "PRACTICE QUESTIONS\n" + "="*40 + "\n\n"
+
+                for i, q in enumerate(questions, 1):
+                    st.markdown(
+                        f"<div class='question-box'><span class='q-number'>Q{i}.</span> {q}</div>",
+                        unsafe_allow_html=True
+                    )
+                    exercise_text += f"Q{i}. {q}\n\n"
+
+                exercise_text += "\n" + "="*40 + "\nANSWER SPACE\n"
+                for i in range(1, len(questions)+1):
+                    exercise_text += f"\nQ{i}: _______________________________________________\n"
+
+                st.divider()
+
+                # ── Hints button ──
+                if groq_api_key:
+                    if st.button("💡 AI से Hints + Answers देखो", key="ai_hints_btn"):
+                        st.session_state.exercise_hints = None
+                        with st.spinner("AI hints + answers बना रहा है..."):
+                            try:
+                                client = Groq(api_key=groq_api_key)
+                                q_text = "\n".join([f"Q{i+1}. {q}" for i, q in enumerate(questions)])
+                                hint_prompt = f"""ICSC Class 8 {subj_name.split(' ',1)[1]} teacher.
+Solve these numericals with step-by-step working:
 
 {q_text}
 
-For each question:
-- Give a 1-line hint/approach
-- Mention relevant formula if applicable
-- Don't give the full answer
+Format for each:
+Q1. Formula: [formula used]
+   Working: [step by step]
+   Answer: [final answer with unit]
 
-Format: Q1. Hint: [hint]"""
-                            
-                            completion = client.chat.completions.create(
-                                model="llama-3.1-8b-instant",
-                                messages=[{"role":"user","content":hint_prompt}],
-                                temperature=0.5,
-                                max_tokens=1000
-                            )
-                            st.markdown("### 💡 AI Hints")
-                            st.markdown(f"""<div class='info-box'>{completion.choices[0].message.content}</div>""", unsafe_allow_html=True)
-                        except Exception as e:
-                            st.error(f"AI Error: {e}")
+Be concise. Show all steps."""
+                                completion = client.chat.completions.create(
+                                    model="llama-3.1-8b-instant",
+                                    messages=[{"role": "user", "content": hint_prompt}],
+                                    temperature=0.3,
+                                    max_tokens=2000
+                                )
+                                st.session_state.exercise_hints = completion.choices[0].message.content
+                            except Exception as e:
+                                st.error(f"❌ Error: {str(e)}")
+
+                if st.session_state.get("exercise_hints"):
+                    st.markdown("### 💡 AI Hints & Step-by-Step Solutions")
+                    st.markdown(
+                        f"<div class='info-box' style='white-space:pre-wrap; font-size:0.9rem;'>{st.session_state.exercise_hints}</div>",
+                        unsafe_allow_html=True
+                    )
+                    exercise_text += "\n\nAI HINTS & SOLUTIONS\n" + "="*40 + "\n" + (st.session_state.exercise_hints or "")
+
+                st.divider()
+
+                # ── Download & Share ──
+                col_d1, col_d2, col_d3 = st.columns(3)
+                with col_d1:
+                    st.download_button(
+                        label="⬇️ Download TXT",
+                        data=exercise_text,
+                        file_name=f"{chapter.replace(' ','_')}_{lv}.txt",
+                        mime="text/plain",
+                        use_container_width=True,
+                        key="dl_txt_ex"
+                    )
+                with col_d2:
+                    csv_text = "Q No,Question,Answer\n"
+                    for i, q in enumerate(questions, 1):
+                        q_clean = q.replace('"', '""').replace(',', ';')
+                        csv_text += f'{i},"{q_clean}",""\n'
+                    st.download_button(
+                        label="📊 Google Sheets CSV",
+                        data=csv_text,
+                        file_name=f"{chapter.replace(' ','_')}_{lv}.csv",
+                        mime="text/csv",
+                        use_container_width=True,
+                        help="Download → Google Sheets में import करो",
+                        key="dl_csv_ex"
+                    )
+                with col_d3:
+                    if st.session_state.get("telegram_link"):
+                        preview = "\n".join([f"Q{i+1}. {q[:65]}..." for i, q in enumerate(questions[:3])])
+                        tg_msg = f"📚 {chapter} — {lv.capitalize()} Practice\n\n{preview}\n\n...और 7 सवाल! ✅"
+                        tg_url = f"https://t.me/share/url?url={st.session_state.telegram_link}&text={tg_msg}"
+                        st.link_button("📲 Telegram Share", tg_url, use_container_width=True)
+                    else:
+                        st.button("📲 Telegram (Sidebar में set करो)", disabled=True, use_container_width=True)
 
 # ========================================
 # WELCOME SCREEN (no subject selected)
