@@ -764,20 +764,36 @@ if st.session_state.get("selected_chapter") and st.session_state.get("selected_s
             
             if st.session_state.get("text_results"):
                 for i, r in enumerate(st.session_state.text_results[:8], 1):
-                    with st.expander(f"{i}. {r.get('title','')[:65]}..."):
-                        st.write(r.get('body','')[:300])
-                        link = r.get('href','#')
-                        st.markdown(f"[🔗 Full Article]({link})")
-                        
-                        # Download option
-                        content_text = f"Chapter: {chapter}\nSubject: {subj_name}\n\nTitle: {r.get('title','')}\n\n{r.get('body','')}\n\nSource: {link}"
-                        st.download_button(
-                            label="⬇️ Save as TXT",
-                            data=content_text,
-                            file_name=f"{chapter.replace(' ','_')}_{i}.txt",
-                            mime="text/plain",
-                            key=f"dl_{i}"
-                        )
+                    title = r.get('title', 'No title')[:70]
+                    body  = r.get('body',  '')[:280]
+                    link  = r.get('href',  '#')
+
+                    st.markdown(f"""<div style='background:var(--card-bg,#fff);
+                        border:1.5px solid #667eea33; border-radius:12px;
+                        padding:14px 18px; margin-bottom:10px;
+                        box-shadow:0 2px 8px rgba(102,126,234,0.08);'>
+                        <div style='font-weight:700; font-size:0.95rem;
+                            color:#667eea; margin-bottom:6px;'>
+                            {i}. {title}
+                        </div>
+                        <div style='font-size:0.88rem; color:#555; line-height:1.6;'>
+                            {body}...
+                        </div>
+                        <a href='{link}' target='_blank'
+                            style='display:inline-block; margin-top:8px; font-size:0.82rem;
+                            color:#764ba2; font-weight:600; text-decoration:none;'>
+                            🔗 Full Article ↗
+                        </a>
+                    </div>""", unsafe_allow_html=True)
+
+                    content_text = f"Chapter: {chapter}\nSubject: {subj_name}\n\nTitle: {r.get('title','')}\n\n{r.get('body','')}\n\nSource: {link}"
+                    st.download_button(
+                        label=f"⬇️ Save #{i} as TXT",
+                        data=content_text,
+                        file_name=f"{chapter.replace(' ','_')}_{i}.txt",
+                        mime="text/plain",
+                        key=f"dl_{i}"
+                    )
         
         with col2:
             st.markdown("### 🤖 AI Summary")
