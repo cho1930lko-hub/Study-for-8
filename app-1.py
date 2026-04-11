@@ -138,8 +138,20 @@ st.markdown("""
 
     .timetable-grid { background: var(--card-bg); border-radius:16px; padding:20px; box-shadow:0 4px 20px var(--shadow); }
     .download-section { background:var(--info-bg); border-radius:14px; padding:18px; border:2px dashed var(--accent1); text-align:center; margin:15px 0; }
-        summary { list-style-type: none !important; }
-    .stExpander svg { display: inline-block !important; }
+        /* 1. पुराने खराब तीर (_arrow_right) को पूरी तरह हटा देगा */
+[data-testid="stExpanderIcon"] { 
+    display: none !important; 
+}
+
+/* 2. नया और सुंदर तीर (Arrow) खुद से लगा देगा */
+.stExpander summary::before {
+    content: "➤"; /* आप यहाँ अपनी पसंद का कोई भी इमोजी या निशान डाल सकते हैं */
+    font-size: 18px;
+    margin-right: 10px;
+    color: #764ba2; /* यह आपके डैशबोर्ड के बैंगनी (Purple) कलर से मैच करेगा */
+    vertical-align: middle;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
