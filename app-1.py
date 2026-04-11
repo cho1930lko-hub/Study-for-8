@@ -775,20 +775,20 @@ if st.session_state.get("selected_chapter") and st.session_state.get("selected_s
                         st.session_state.text_results = []
             
             if st.session_state.get("text_results"):
-                        for i, r in enumerate(st.session_state.text_results[:8], 1):
-            clean_title = r.get('title','').replace("_arrow_right", "").strip()
-            with st.expander(f"➤ {i}. {clean_title[:55]}..."):
+                 for i, r in enumerate(st.session_state.text_results[:8], 1):
+                    clean_title = r.get('title','').replace("_arrow_right", "").strip()
+                     with st.expander(f"➤ {i}. {clean_title[:55]}..."):
 
-                        st.write(r.get('body','')[:300])
+                         st.write(r.get('body','')[:300])
                         link = r.get('href','#')
                         st.markdown(f"[🔗 Full Article]({link})")
-                        
-                        # Download option
-                        content_text = f"Chapter: {chapter}\nSubject: {subj_name}\n\nTitle: {r.get('title','')}\n\n{r.get('body','')}\n\nSource: {link}"
-                        st.download_button(
-                            label="⬇️ Save as TXT",
-                            data=content_text,
-                            file_name=f"{chapter.replace(' ','_')}_{i}.txt",
+                            
+                            # Download option
+                            content_text = f"Chapter: {chapter}\nSubject: {subj_name}\n\nTitle: {r.get('title','')}\n\n{r.get('body','')}\n\nSource: {link}"
+                            st.download_button(
+                                label="⬇️ Save as TXT",
+                                data=content_text,
+                                file_name=f"{chapter.replace(' ','_')}_{i}.txt",
                             mime="text/plain",
                             key=f"dl_{i}"
                         )
