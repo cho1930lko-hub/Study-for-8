@@ -21,140 +21,123 @@ st.set_page_config(
 # ========================================
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&family=Poppins:wght@400;500;600;700&display=swap');
-    
-    * { font-family: 'Nunito', sans-serif; }
-    
-    .stApp {
-        background: linear-gradient(135deg, #667eea15 0%, #764ba215 50%, #f093fb15 100%);
+    @import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;600;700;800&family=Quicksand:wght@400;500;600;700&display=swap');
+
+    /* ── DAY MODE (default) ── */
+    :root {
+        --bg:        #f4f6ff;
+        --card-bg:   #ffffff;
+        --text:      #2d2d2d;
+        --text-soft: #666;
+        --border:    #e0e0f0;
+        --accent1:   #667eea;
+        --accent2:   #764ba2;
+        --info-bg:   #667eea12;
+        --q-bg:      #f8f9ff;
+        --shadow:    rgba(102,126,234,0.12);
+        --font-head: 'Baloo 2', cursive;
+        --font-body: 'Quicksand', sans-serif;
     }
-    
+
+    /* ── NIGHT MODE ── */
+    [data-theme="dark"] {
+        --bg:        #0f1117;
+        --card-bg:   #1a1d2e;
+        --text:      #e8eaf6;
+        --text-soft: #9fa8c7;
+        --border:    #2e3150;
+        --accent1:   #7c8ef7;
+        --accent2:   #a78bfa;
+        --info-bg:   #7c8ef720;
+        --q-bg:      #1e2140;
+        --shadow:    rgba(0,0,0,0.4);
+        --font-head: 'Baloo 2', cursive;
+        --font-body: 'Quicksand', sans-serif;
+    }
+
+    * { font-family: var(--font-body) !important; color: var(--text); }
+    h1,h2,h3 { font-family: var(--font-head) !important; }
+
+    .stApp { background: var(--bg) !important; }
+
+    /* Sidebar dark */
+    section[data-testid="stSidebar"] {
+        background: var(--card-bg) !important;
+        border-right: 1px solid var(--border) !important;
+    }
+
     .main-header {
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        padding: 20px 30px;
-        border-radius: 20px;
-        color: white;
-        text-align: center;
-        margin-bottom: 25px;
-        box-shadow: 0 8px 25px rgba(102,126,234,0.4);
+        background: linear-gradient(135deg, var(--accent1) 0%, var(--accent2) 100%);
+        padding: 22px 30px; border-radius: 20px; color: white;
+        text-align: center; margin-bottom: 25px;
+        box-shadow: 0 8px 30px var(--shadow);
     }
-    
-    .main-header h1 { font-size: 2.2rem; font-weight: 800; margin: 0; letter-spacing: -0.5px; }
-    .main-header p { font-size: 1rem; opacity: 0.9; margin: 5px 0 0 0; }
-    
+    .main-header h1 { font-size: 2.2rem; font-weight: 800; margin: 0; color: white !important; }
+    .main-header p  { font-size: 1rem; opacity: 0.9; margin: 5px 0 0 0; color: white !important; }
+
     .subject-card {
-        background: white;
-        border-radius: 16px;
-        padding: 18px;
-        text-align: center;
-        cursor: pointer;
+        background: var(--card-bg);
+        border-radius: 16px; padding: 18px; text-align: center;
         border: 3px solid transparent;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-        transition: all 0.3s ease;
-        margin-bottom: 10px;
+        box-shadow: 0 4px 15px var(--shadow);
+        transition: all 0.3s ease; margin-bottom: 10px;
     }
-    
-    .subject-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-    }
-    
-    .english-card { border-color: #FF6B6B; background: linear-gradient(135deg, #fff5f5, #fff); }
-    .maths-card   { border-color: #4ECDC4; background: linear-gradient(135deg, #f0fffe, #fff); }
-    .physics-card { border-color: #45B7D1; background: linear-gradient(135deg, #f0f8ff, #fff); }
-    .chemistry-card { border-color: #96CEB4; background: linear-gradient(135deg, #f0fff4, #fff); }
-    .biology-card { border-color: #FFEAA7; background: linear-gradient(135deg, #fffdf0, #fff); }
-    .history-card { border-color: #DDA0DD; background: linear-gradient(135deg, #fdf0ff, #fff); }
-    .geography-card { border-color: #98D8C8; background: linear-gradient(135deg, #f0fffa, #fff); }
-    
-    .chapter-btn {
-        background: linear-gradient(135deg, #667eea, #764ba2);
-        color: white;
-        border: none;
-        border-radius: 12px;
-        padding: 10px 18px;
-        margin: 5px;
-        cursor: pointer;
-        font-size: 0.85rem;
-        font-weight: 600;
-        box-shadow: 0 3px 10px rgba(102,126,234,0.3);
-        transition: all 0.2s;
-    }
-    
+    .subject-card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px var(--shadow); }
+
+    .english-card    { border-color: #FF6B6B; }
+    .maths-card      { border-color: #4ECDC4; }
+    .physics-card    { border-color: #45B7D1; }
+    .chemistry-card  { border-color: #96CEB4; }
+    .biology-card    { border-color: #F6C90E; }
+    .history-card    { border-color: #DDA0DD; }
+    .geography-card  { border-color: #98D8C8; }
+    .computer-card   { border-color: #FF9F43; }
+
     .info-box {
-        background: linear-gradient(135deg, #667eea15, #764ba215);
-        border-left: 4px solid #667eea;
+        background: var(--info-bg);
+        border-left: 4px solid var(--accent1);
         border-radius: 0 12px 12px 0;
-        padding: 15px 20px;
-        margin: 10px 0;
+        padding: 15px 20px; margin: 10px 0;
     }
-    
-    .exercise-card {
-        background: white;
-        border-radius: 14px;
-        padding: 20px;
-        border-left: 5px solid #4ECDC4;
-        box-shadow: 0 3px 12px rgba(0,0,0,0.08);
-        margin: 10px 0;
+
+    .question-box {
+        background: var(--q-bg);
+        border: 2px solid var(--accent1)33;
+        border-radius: 14px; padding: 18px;
+        margin: 8px 0; font-size: 1.05rem;
     }
-    
-    .timetable-grid {
-        background: white;
-        border-radius: 16px;
-        padding: 20px;
-        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+    .q-number { color: var(--accent1); font-weight: 800; font-size: 1.2rem; }
+
+    .notes-box {
+        background: var(--card-bg);
+        border: 2px solid #F6C90E;
+        border-radius: 14px; padding: 16px;
+        margin: 8px 0;
+        box-shadow: 0 3px 12px var(--shadow);
     }
-    
-    .badge {
-        display: inline-block;
-        padding: 3px 10px;
-        border-radius: 20px;
-        font-size: 0.75rem;
-        font-weight: 700;
-        margin: 2px;
-    }
-    
-    .badge-icsc { background: #667eea22; color: #667eea; }
+
+    .mock-correct { background:#e8f8f0; border-left:4px solid #2ecc71; padding:10px 15px; border-radius:0 10px 10px 0; margin:5px 0; }
+    .mock-wrong   { background:#fdecea; border-left:4px solid #e74c3c; padding:10px 15px; border-radius:0 10px 10px 0; margin:5px 0; }
+
+    .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:700; margin:2px; }
+    .badge-icsc   { background: var(--accent1)22; color: var(--accent1); }
     .badge-class8 { background: #FF6B6B22; color: #FF6B6B; }
-    
+
     .stButton>button {
-        border-radius: 12px !important;
-        font-weight: 700 !important;
-        font-family: 'Nunito', sans-serif !important;
-        transition: all 0.2s !important;
+        border-radius: 12px !important; font-weight: 700 !important;
+        font-family: var(--font-body) !important; transition: all 0.2s !important;
     }
-    
     .stButton>button:hover { transform: translateY(-2px) !important; }
-    
+
     div[data-testid="stExpander"] {
         border-radius: 12px !important;
-        border: 1px solid #e0e0e0 !important;
+        border: 1px solid var(--border) !important;
         margin-bottom: 8px !important;
+        background: var(--card-bg) !important;
     }
-    
-    .question-box {
-        background: linear-gradient(135deg, #f8f9ff, #fff);
-        border: 2px solid #667eea33;
-        border-radius: 14px;
-        padding: 18px;
-        margin: 8px 0;
-        font-size: 1.05rem;
-    }
-    
-    .q-number {
-        color: #667eea;
-        font-weight: 800;
-        font-size: 1.2rem;
-    }
-    
-    .download-section {
-        background: linear-gradient(135deg, #11998e22, #38ef7d22);
-        border-radius: 14px;
-        padding: 18px;
-        border: 2px dashed #11998e;
-        text-align: center;
-        margin: 15px 0;
-    }
+
+    .timetable-grid { background: var(--card-bg); border-radius:16px; padding:20px; box-shadow:0 4px 20px var(--shadow); }
+    .download-section { background:var(--info-bg); border-radius:14px; padding:18px; border:2px dashed var(--accent1); text-align:center; margin:15px 0; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -312,6 +295,23 @@ SUBJECTS = {
             "India – Climate, Vegetation & Wildlife",
             "Natural Disasters & Their Management",
             "Map Skills & Globe"
+        ]
+    },
+    "💻 Computer": {
+        "icon": "💻",
+        "color": "#FF9F43",
+        "card_class": "computer-card",
+        "has_numericals": False,
+        "chapters": [
+            "Introduction to Computers", "Hardware & Software",
+            "Operating System", "Microsoft Word – Advanced",
+            "Microsoft Excel – Spreadsheet Basics",
+            "Microsoft PowerPoint – Presentations",
+            "Internet & Email", "HTML Basics – Web Pages",
+            "Scratch / Logo Programming", "Cyber Safety & Ethics",
+            "Number Systems (Binary, Decimal, Octal, Hexadecimal)",
+            "Data & Information", "Memory & Storage Devices",
+            "Input & Output Devices", "Introduction to Networking"
         ]
     }
 }
@@ -543,10 +543,33 @@ def generate_timetable():
 with st.sidebar:
     st.markdown("""
     <div style='background: linear-gradient(135deg,#667eea,#764ba2); padding:15px; border-radius:12px; color:white; text-align:center; margin-bottom:15px;'>
-        <h3 style='margin:0; font-size:1.1rem;'>🎓 La Martiniere Girls</h3>
+        <h3 style='margin:0; font-size:1.1rem; font-family:"Baloo 2",cursive;'>🎓 La Martiniere Girls</h3>
         <p style='margin:4px 0 0 0; font-size:0.8rem; opacity:0.85;'>ICSC Board • Class 8</p>
     </div>
     """, unsafe_allow_html=True)
+
+    # ── Dark Mode Toggle ──
+    dark_mode = st.toggle("🌙 Night Mode (Dark)", value=st.session_state.get("dark_mode", False))
+    st.session_state.dark_mode = dark_mode
+    if dark_mode:
+        st.markdown("""<script>
+        document.querySelector('[data-testid="stAppViewContainer"]').setAttribute('data-theme','dark');
+        document.querySelector('body').setAttribute('data-theme','dark');
+        </script>""", unsafe_allow_html=True)
+        # Inject dark background via style override
+        st.markdown("""<style>
+        .stApp, section[data-testid="stSidebar"] { background-color: #0f1117 !important; }
+        .stApp * { color: #e8eaf6 !important; }
+        div[data-testid="stExpander"] { background: #1a1d2e !important; border-color: #2e3150 !important; }
+        .question-box { background: #1e2140 !important; border-color: #7c8ef733 !important; }
+        .info-box { background: #7c8ef720 !important; border-color: #7c8ef7 !important; }
+        .subject-card { background: #1a1d2e !important; }
+        .stButton>button { background: #1e2140 !important; }
+        </style>""", unsafe_allow_html=True)
+    else:
+        st.markdown("""<style>
+        .stApp { background: #f4f6ff !important; }
+        </style>""", unsafe_allow_html=True)
 
     st.header("⚙️ Settings")
 
@@ -569,18 +592,44 @@ with st.sidebar:
 
     st.divider()
     st.markdown("**📲 Telegram Channel** *(Optional)*")
-    st.caption("अगर आपका कोई Telegram channel है जहाँ students को notes share करते हो, तो उसका link यहाँ डालो। Download के बाद 'Share on Telegram' button से सीधे channel पर भेज सकते हो। नहीं है तो खाली छोड़ दो।")
+    st.caption("अगर आपका Telegram channel है तो link डालो — notes share कर सकते हो। नहीं है तो खाली छोड़ दो।")
     telegram_link = st.text_input("Channel Link", placeholder="https://t.me/yourchannel", value=st.session_state.get("telegram_link",""), label_visibility="collapsed")
     if telegram_link:
         st.session_state.telegram_link = telegram_link
         st.success("✅ Linked!")
-    
-    
+
     st.divider()
     st.markdown("**🌍 Search Region**")
     selected_region = "in-en"
     st.caption("India (in-en) - NCERT, PhysicsWallah, Vedantu")
-    
+
+    st.divider()
+
+    # ── Pomodoro Timer ──
+    st.markdown("**⏱️ Pomodoro Study Timer**")
+    pomo_mins = st.selectbox("Study time:", [25, 30, 45, 50], index=0, key="pomo_mins")
+    col_p1, col_p2 = st.columns(2)
+    with col_p1:
+        if st.button("▶️ Start", key="pomo_start", use_container_width=True):
+            st.session_state.pomo_end = time.time() + pomo_mins * 60
+            st.session_state.pomo_running = True
+    with col_p2:
+        if st.button("⏹ Stop", key="pomo_stop", use_container_width=True):
+            st.session_state.pomo_running = False
+            st.session_state.pomo_end = None
+
+    if st.session_state.get("pomo_running") and st.session_state.get("pomo_end"):
+        remaining = int(st.session_state.pomo_end - time.time())
+        if remaining > 0:
+            mins, secs = divmod(remaining, 60)
+            st.markdown(f"""<div style='background:linear-gradient(135deg,#667eea,#764ba2);
+                color:white; border-radius:12px; padding:12px; text-align:center; font-size:1.6rem; font-weight:800;
+                font-family:"Baloo 2",cursive;'>⏱️ {mins:02d}:{secs:02d}</div>""", unsafe_allow_html=True)
+            st.caption("Focus! 📚 Take a break after timer ends.")
+        else:
+            st.success("🎉 Time up! Take a 5-min break!")
+            st.session_state.pomo_running = False
+
     st.divider()
     if st.button("📅 Generate Study Timetable", use_container_width=True):
         st.session_state.show_timetable = True
@@ -683,10 +732,11 @@ if st.session_state.get("selected_chapter") and st.session_state.get("selected_s
     st.markdown(f"## 📖 {chapter} — {subj_name}")
     
     # Main Tabs
-    main_tab_labels = ["📝 Study Material", "🎥 Videos", "🖼️ Diagrams"]
+    main_tab_labels = ["📝 Study Material", "🎥 Videos", "🖼️ Diagrams", "📓 My Notes"]
     if subj_data["has_numericals"]:
         main_tab_labels.append("🧮 Practice Exercises")
-    
+    main_tab_labels.append("🧠 Mock Test")
+
     tabs = st.tabs(main_tab_labels)
     
     # ==================== TAB 1: STUDY MATERIAL ====================
@@ -776,67 +826,14 @@ IMPORTANT: Write everything in ENGLISH ONLY. Simple, clear, exam-focused."""
                     f"<div class='info-box' style='white-space:pre-wrap;'>{st.session_state.ai_summary}</div>",
                     unsafe_allow_html=True
                 )
-
-                # ── Markdown → HTML converter ──
-                import re
-                def md_to_html(text):
-                    text = re.sub(r'\*\*(.+?)\*\*', r'<strong>\1</strong>', text)
-                    text = re.sub(r'\*(.+?)\*',     r'<em>\1</em>',         text)
-                    text = re.sub(r'^### (.+)$', r'<h3>\1</h3>', text, flags=re.MULTILINE)
-                    text = re.sub(r'^## (.+)$',  r'<h2>\1</h2>', text, flags=re.MULTILINE)
-                    text = re.sub(r'^# (.+)$',   r'<h1>\1</h1>', text, flags=re.MULTILINE)
-                    text = re.sub(r'^- (.+)$',   r'<li>\1</li>', text, flags=re.MULTILINE)
-                    text = re.sub(r'(<li>.*?</li>\n?)+', lambda m: f'<ul>{m.group()}</ul>', text, flags=re.DOTALL)
-                    text = text.replace('\n', '<br>')
-                    return text
-
-                html_body = md_to_html(st.session_state.ai_summary)
-                html_content = f"""<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>{chapter} — AI Study Notes</title>
-    <style>
-        body {{ font-family: 'Segoe UI', Arial, sans-serif; max-width: 820px;
-                margin: 40px auto; padding: 30px; color: #333; line-height: 1.8; }}
-        h1, h2 {{ color: #667eea; }}
-        h3 {{ color: #764ba2; }}
-        ul {{ background: #f8f9ff; border-left: 4px solid #667eea;
-              padding: 10px 10px 10px 30px; border-radius: 0 8px 8px 0; }}
-        li {{ margin: 6px 0; }}
-        strong {{ color: #222; }}
-        em {{ color: #555; font-style: italic; }}
-        .header {{ background: linear-gradient(135deg,#667eea,#764ba2);
-                   color: white; padding: 22px 28px; border-radius: 14px; margin-bottom: 28px; }}
-        .header h1 {{ color: white; border: none; margin: 0; font-size: 1.6rem; }}
-        .header p  {{ margin: 6px 0 0 0; opacity: 0.85; font-size: 0.9rem; }}
-        .content {{ background: #fff; border: 1px solid #e8e8f0;
-                    border-radius: 12px; padding: 25px 30px; }}
-        .footer {{ margin-top: 30px; padding-top: 12px; border-top: 1px solid #ddd;
-                   color: #aaa; font-size: 0.78rem; text-align: center; }}
-    </style>
-</head>
-<body>
-    <div class="header">
-        <h1>📚 {chapter}</h1>
-        <p>Subject: {subj_name.split(' ',1)[1]} &nbsp;|&nbsp; ICSC Class 8 &nbsp;|&nbsp; La Martiniere Girls College</p>
-    </div>
-    <div class="content">{html_body}</div>
-    <div class="footer">
-        Generated by StudyMate AI &nbsp;|&nbsp; {datetime.now().strftime("%d %b %Y, %I:%M %p")}
-    </div>
-</body>
-</html>"""
-
                 st.download_button(
-                    "⬇️ Download AI Summary (HTML — Formatted)",
-                    data=html_content,
-                    file_name=f"AI_Summary_{chapter.replace(' ','_')}.html",
-                    mime="text/html",
+                    "⬇️ Download AI Summary",
+                    data=st.session_state.ai_summary,
+                    file_name=f"AI_Summary_{chapter.replace(' ','_')}.txt",
+                    mime="text/plain",
                     key="dl_ai_summary"
                 )
-                st.caption("💡 File double-click करो → browser में खुलेगी | Bold, Italic, Colors सब सही दिखेंगे | Word में भी import हो सकती है")
-
+            
             # Telegram Share
             if st.session_state.get("telegram_link"):
                 telegram_url = f"https://t.me/share/url?url={st.session_state.telegram_link}&text=Check out {chapter} notes!"
@@ -917,10 +914,72 @@ IMPORTANT: Write everything in ENGLISH ONLY. Simple, clear, exam-focused."""
                         st.markdown(f"[Source]({img.get('url','#')})")
                     except:
                         st.markdown(f"[🖼️ View Image]({img.get('image','#')})")
-    
-    # ==================== TAB 4: EXERCISES (Math/Physics/Chem) ====================
-    if subj_data["has_numericals"] and len(tabs) > 3:
-        with tabs[3]:
+
+    # ==================== TAB 4: MY NOTES PAD ====================
+    with tabs[3]:
+        st.markdown("### 📓 My Personal Notes")
+        st.caption("यहाँ अपने notes लिखो — हर chapter के लिए अलग save रहेंगे")
+
+        note_key = f"note_{subj_name}_{chapter}".replace(" ","_")
+
+        existing_note = st.session_state.get(note_key, "")
+        user_note = st.text_area(
+            f"✏️ Notes for: {chapter}",
+            value=existing_note,
+            height=280,
+            placeholder="यहाँ लिखो...\n• Key points\n• Formulas\n• Things to remember\n• Questions to ask teacher",
+            key=f"textarea_{note_key}"
+        )
+
+        col_n1, col_n2, col_n3 = st.columns(3)
+        with col_n1:
+            if st.button("💾 Save Notes", key="save_note", use_container_width=True):
+                st.session_state[note_key] = user_note
+                st.success("✅ Saved!")
+
+        with col_n2:
+            if user_note:
+                note_html = f"""<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8">
+<title>My Notes – {chapter}</title>
+<style>
+body {{ font-family:'Segoe UI',sans-serif; max-width:750px; margin:40px auto; padding:25px; color:#333; line-height:1.8; }}
+.header {{ background:linear-gradient(135deg,#F6C90E,#f39c12); color:white; padding:18px 24px; border-radius:12px; margin-bottom:22px; }}
+.header h1 {{ margin:0; font-size:1.4rem; color:white; }}
+.header p  {{ margin:4px 0 0 0; opacity:0.85; font-size:0.85rem; }}
+.notes {{ background:#fffef0; border:2px solid #F6C90E; border-radius:12px; padding:22px; white-space:pre-wrap; font-size:1rem; }}
+.footer {{ margin-top:25px; color:#aaa; font-size:0.75rem; text-align:center; }}
+</style></head><body>
+<div class="header">
+  <h1>📓 My Notes — {chapter}</h1>
+  <p>Subject: {subj_name.split(' ',1)[1]} | ICSC Class 8 | La Martiniere Girls</p>
+</div>
+<div class="notes">{user_note}</div>
+<div class="footer">Saved on {datetime.now().strftime("%d %b %Y, %I:%M %p")} | StudyMate</div>
+</body></html>"""
+                st.download_button(
+                    "⬇️ Download Notes (HTML)",
+                    data=note_html,
+                    file_name=f"Notes_{chapter.replace(' ','_')}.html",
+                    mime="text/html",
+                    use_container_width=True,
+                    key="dl_note"
+                )
+
+        with col_n3:
+            if st.button("🗑️ Clear Notes", key="clear_note", use_container_width=True):
+                st.session_state[note_key] = ""
+                st.rerun()
+
+        # Show all saved notes count
+        saved = [k for k in st.session_state if k.startswith("note_") and st.session_state[k]]
+        if saved:
+            st.caption(f"📌 आपके पास कुल {len(saved)} chapters के notes saved हैं इस session में")
+
+    # ==================== TAB 5: EXERCISES (Math/Physics/Chem) ====================
+    if subj_data["has_numericals"]:
+        ex_tab_idx = 4
+        with tabs[ex_tab_idx]:
             st.markdown(f"### 🧮 Practice Exercises — {chapter}")
 
             col_e1, col_e2 = st.columns(2)
@@ -1114,58 +1173,210 @@ Be clear and concise. Show all steps. English only."""
                     else:
                         st.button("📲 Telegram (Sidebar में set करो)", disabled=True, use_container_width=True)
 
-# ========================================
-# WELCOME SCREEN (no subject selected)
-# ========================================
+    # ==================== LAST TAB: MOCK TEST ====================
+    mock_tab_idx = 5 if subj_data["has_numericals"] else 4
+    with tabs[mock_tab_idx]:
+        st.markdown("### 🧠 Mock Test — MCQ")
+        st.caption(f"AI {chapter} पर 10 MCQ questions बनाएगा — Time limit के साथ | Score भी मिलेगा!")
+
+        col_m1, col_m2 = st.columns(2)
+        with col_m1:
+            mock_time = st.selectbox("⏱️ Time Limit:", [5, 10, 15, 20], index=1, key="mock_time_sel")
+        with col_m2:
+            mock_diff = st.selectbox("Difficulty:", ["Easy", "Medium", "Hard"], index=1, key="mock_diff")
+
+        if st.button("🎯 Start Mock Test", key="start_mock", type="primary"):
+            if not groq_api_key:
+                st.error("❌ Groq API Key चाहिए Mock Test के लिए!")
+            else:
+                st.session_state.mock_questions = None
+                st.session_state.mock_answers = {}
+                st.session_state.mock_submitted = False
+                st.session_state.mock_start_time = time.time()
+                st.session_state.mock_time_limit = mock_time * 60
+
+                with st.spinner("🤖 AI MCQ questions बना रहा है..."):
+                    try:
+                        client = Groq(api_key=groq_api_key)
+                        mock_prompt = f"""You are an ICSC Class 8 {subj_name.split(' ',1)[1]} teacher creating a mock test.
+
+Chapter: {chapter}
+Difficulty: {mock_diff}
+
+Generate EXACTLY 10 MCQ questions. Respond ONLY with valid JSON, no extra text.
+
+Format:
+[
+  {{
+    "q": "Question text here?",
+    "options": ["A) option1", "B) option2", "C) option3", "D) option4"],
+    "answer": "A",
+    "explanation": "Brief explanation why A is correct."
+  }}
+]
+
+Rules:
+- Questions must be from {chapter} only
+- All in English
+- One clearly correct answer
+- Plausible wrong options
+- Difficulty: {mock_diff}
+- Return ONLY the JSON array, nothing else"""
+
+                        completion = client.chat.completions.create(
+                            model="llama-3.3-70b-versatile",
+                            messages=[{"role": "user", "content": mock_prompt}],
+                            temperature=0.7,
+                            max_tokens=2000
+                        )
+                        raw = completion.choices[0].message.content.strip()
+                        # Clean JSON
+                        raw = raw.replace("```json","").replace("```","").strip()
+                        import json
+                        mcqs = json.loads(raw)
+                        st.session_state.mock_questions = mcqs[:10]
+                    except Exception as e:
+                        st.error(f"❌ Error generating test: {str(e)}")
+
+        # ── Show Mock Test ──
+        if st.session_state.get("mock_questions") and not st.session_state.get("mock_submitted"):
+            mcqs = st.session_state.mock_questions
+
+            # Timer display
+            if st.session_state.get("mock_start_time"):
+                elapsed = time.time() - st.session_state.mock_start_time
+                limit   = st.session_state.get("mock_time_limit", 600)
+                left    = max(0, int(limit - elapsed))
+                ml, ms  = divmod(left, 60)
+                color   = "#e74c3c" if left < 60 else "#2ecc71"
+                st.markdown(f"""<div style='background:{color}; color:white; border-radius:10px;
+                    padding:10px; text-align:center; font-size:1.4rem; font-weight:800;
+                    font-family:"Baloo 2",cursive; margin-bottom:15px;'>
+                    ⏱️ Time Left: {ml:02d}:{ms:02d}</div>""", unsafe_allow_html=True)
+                if left == 0:
+                    st.session_state.mock_submitted = True
+                    st.rerun()
+
+            st.markdown("---")
+            for i, mcq in enumerate(mcqs):
+                st.markdown(f"<div class='question-box'><span class='q-number'>Q{i+1}.</span> {mcq.get('q','')}</div>",
+                    unsafe_allow_html=True)
+                choice = st.radio(
+                    f"Q{i+1}",
+                    mcq.get("options", []),
+                    key=f"mock_q_{i}",
+                    label_visibility="collapsed"
+                )
+                st.session_state.mock_answers[i] = choice[0] if choice else ""
+
+            st.divider()
+            if st.button("✅ Submit Test", key="submit_mock", type="primary", use_container_width=True):
+                st.session_state.mock_submitted = True
+                st.rerun()
+
+        # ── Show Results ──
+        if st.session_state.get("mock_submitted") and st.session_state.get("mock_questions"):
+            mcqs    = st.session_state.mock_questions
+            answers = st.session_state.get("mock_answers", {})
+            score   = 0
+
+            st.markdown("## 📊 Your Result")
+
+            for i, mcq in enumerate(mcqs):
+                user_ans    = answers.get(i, "")
+                correct_ans = mcq.get("answer", "").strip().upper()
+                is_correct  = user_ans.strip().upper().startswith(correct_ans)
+                if is_correct:
+                    score += 1
+                    st.markdown(f"""<div class='mock-correct'>
+                        ✅ <b>Q{i+1}.</b> {mcq.get('q','')}<br>
+                        Your answer: <b>{user_ans}</b> — Correct! 🎉<br>
+                        <small>{mcq.get('explanation','')}</small>
+                    </div>""", unsafe_allow_html=True)
+                else:
+                    st.markdown(f"""<div class='mock-wrong'>
+                        ❌ <b>Q{i+1}.</b> {mcq.get('q','')}<br>
+                        Your answer: <b>{user_ans}</b> | Correct: <b>{correct_ans}</b><br>
+                        <small>{mcq.get('explanation','')}</small>
+                    </div>""", unsafe_allow_html=True)
+
+            # Score card
+            pct = int(score/len(mcqs)*100)
+            grade = "🏆 Excellent!" if pct>=80 else ("👍 Good!" if pct>=60 else ("📚 Keep Practicing!" if pct>=40 else "💪 Needs More Study"))
+            grade_color = "#2ecc71" if pct>=80 else ("#f39c12" if pct>=60 else "#e74c3c")
+            st.markdown(f"""<div style='background:{grade_color}; color:white; border-radius:16px;
+                padding:22px; text-align:center; margin:20px 0; font-family:"Baloo 2",cursive;'>
+                <div style='font-size:2.5rem; font-weight:800;'>{score}/{len(mcqs)}</div>
+                <div style='font-size:1.2rem;'>{pct}% — {grade}</div>
+            </div>""", unsafe_allow_html=True)
+
+            if st.button("🔄 Try Again", key="retry_mock", use_container_width=True):
+                st.session_state.mock_questions = None
+                st.session_state.mock_submitted = False
+                st.session_state.mock_answers = {}
+                st.rerun()
 if not st.session_state.get("selected_subject"):
     st.divider()
-    col1, col2, col3 = st.columns(3)
-    
+    col1, col2, col3, col4 = st.columns(4)
+
     with col1:
         st.markdown("""<div class='subject-card english-card'>
             <h3>📖 English Grammar</h3>
-            <p>Tenses, Voice, Speech, Comprehension & more</p>
+            <p>Tenses, Voice, Speech, Comprehension</p>
             <small>15 Chapters</small>
         </div>""", unsafe_allow_html=True)
-        
         st.markdown("""<div class='subject-card history-card'>
             <h3>🏛️ History</h3>
             <p>ICSC Class 8 India & World History</p>
             <small>12 Chapters</small>
         </div>""", unsafe_allow_html=True)
-    
+
     with col2:
         st.markdown("""<div class='subject-card maths-card'>
             <h3>➕ Mathematics</h3>
-            <p>Algebra, Geometry, Statistics & Numericals</p>
-            <small>18 Chapters + Exercises</small>
+            <p>Algebra, Geometry, Statistics + Exercises</p>
+            <small>18 Chapters</small>
         </div>""", unsafe_allow_html=True)
-        
         st.markdown("""<div class='subject-card geography-card'>
             <h3>🌍 Geography</h3>
             <p>India, World Geography, Resources</p>
             <small>12 Chapters</small>
         </div>""", unsafe_allow_html=True)
-    
+
     with col3:
         st.markdown("""<div class='subject-card physics-card'>
             <h3>⚡ Physics</h3>
-            <p>Force, Sound, Light, Electricity + Numericals</p>
-            <small>12 Chapters + Exercises</small>
+            <p>Force, Sound, Light + Numericals</p>
+            <small>12 Chapters</small>
         </div>""", unsafe_allow_html=True)
-        
         st.markdown("""<div class='subject-card chemistry-card'>
             <h3>🧪 Chemistry</h3>
-            <p>Atoms, Reactions, Acids & Numericals</p>
-            <small>12 Chapters + Exercises</small>
+            <p>Atoms, Reactions, Acids + Numericals</p>
+            <small>12 Chapters</small>
         </div>""", unsafe_allow_html=True)
-    
+
+    with col4:
+        st.markdown("""<div class='subject-card biology-card'>
+            <h3>🌿 Biology</h3>
+            <p>Cells, Microorganisms, Human Body</p>
+            <small>12 Chapters</small>
+        </div>""", unsafe_allow_html=True)
+        st.markdown("""<div class='subject-card computer-card'>
+            <h3>💻 Computer</h3>
+            <p>HTML, Excel, Networking, Cyber Safety</p>
+            <small>15 Chapters</small>
+        </div>""", unsafe_allow_html=True)
+
     st.markdown("""
-    <div style='background: linear-gradient(135deg,#667eea15,#764ba215); border-radius:16px; padding:20px; margin-top:20px; text-align:center; border: 2px dashed #667eea44;'>
-        <h3>🚀 How to Use</h3>
-        <p>1️⃣ <b>Subject चुनो</b> → 2️⃣ <b>Chapter select करो</b> → 3️⃣ <b>Material, Videos & Exercises देखो</b></p>
-        <p>💡 Maths, Physics, Chemistry में <b>Practice Exercises</b> भी generate होते हैं!</p>
-        <p>📥 <b>Download</b> करो TXT या CSV में | 📲 <b>Telegram</b> से जोड़ो</p>
+    <div style='background:linear-gradient(135deg,#667eea15,#764ba215);
+        border-radius:16px; padding:22px; margin-top:20px; text-align:center;
+        border:2px dashed #667eea44;'>
+        <h3 style='font-family:"Baloo 2",cursive;'>🚀 How to Use</h3>
+        <p>1️⃣ <b>Subject चुनो</b> → 2️⃣ <b>Chapter select करो</b> → 3️⃣ <b>Study Material, Videos, Notes & Mock Test देखो</b></p>
+        <p>🧮 Maths, Physics, Chemistry → <b>Practice Exercises + AI Solutions</b></p>
+        <p>🧠 हर chapter पर <b>Mock Test</b> दो और score देखो!</p>
+        <p>📓 <b>My Notes</b> tab में खुद notes लिखो और download करो</p>
+        <p>⏱️ Sidebar में <b>Pomodoro Timer</b> — Focus के साथ पढ़ो!</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -1174,9 +1385,17 @@ if not st.session_state.get("selected_subject"):
 # ========================================
 for key in ["selected_subject", "selected_chapter", "text_results", "video_results",
             "image_results", "exercise_questions", "ai_summary", "show_timetable",
-            "exercise_chapter", "exercise_level", "exercise_timestamp"]:
+            "exercise_chapter", "exercise_level", "exercise_timestamp",
+            "mock_questions", "mock_answers", "mock_submitted", "mock_start_time",
+            "pomo_running", "pomo_end", "dark_mode", "ai_summary_chapter",
+            "exercise_hints", "video_results", "image_results"]:
     if key not in st.session_state:
-        st.session_state[key] = None if key != "show_timetable" else False
+        if key in ["show_timetable", "pomo_running", "mock_submitted", "dark_mode"]:
+            st.session_state[key] = False
+        elif key == "mock_answers":
+            st.session_state[key] = {}
+        else:
+            st.session_state[key] = None
 
 # ========================================
 # FOOTER
@@ -1184,10 +1403,11 @@ for key in ["selected_subject", "selected_chapter", "text_results", "video_resul
 st.markdown("---")
 st.markdown("""
 <div style='text-align:center; color:#888; font-size:0.85rem; padding:10px;'>
-    Made with ❤️ for <b>La Martiniere Girls College</b> | ICSC Class 8 | 
-    Powered by <b>Groq AI + ddgs</b> | Streamlit Cloud Ready 🚀<br>
-    <small>📌 Free Resources: <a href='https://console.groq.com/keys' target='_blank'>Groq API</a> | 
-    <a href='https://www.topperlearning.com' target='_blank'>TopperLearning</a> | 
+    Made with ❤️ for <b>La Martiniere Girls College</b> | ICSC Class 8 |
+    Powered by <b>Groq llama-3.3-70b + ddgs</b> | Streamlit Cloud Ready 🚀<br>
+    <small>📌 Free Resources:
+    <a href='https://console.groq.com/keys' target='_blank'>Groq API</a> |
+    <a href='https://www.topperlearning.com' target='_blank'>TopperLearning</a> |
     <a href='https://www.vedantu.com' target='_blank'>Vedantu</a></small>
 </div>
 """, unsafe_allow_html=True)
