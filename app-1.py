@@ -120,7 +120,7 @@ st.markdown("""
     .mock-wrong   { background:#fdecea; border-left:4px solid #e74c3c; padding:10px 15px; border-radius:0 10px 10px 0; margin:5px 0; }
 
     .badge { display:inline-block; padding:3px 10px; border-radius:20px; font-size:0.75rem; font-weight:700; margin:2px; }
-    .badge-icsc   { background: var(--accent1)22; color: var(--accent1); }
+    .badge-ICSE   { background: var(--accent1)22; color: var(--accent1); }
     .badge-class8 { background: #FF6B6B22; color: #FF6B6B; }
 
     .stButton>button {
@@ -160,7 +160,7 @@ def check_password():
             <div style='font-size:3.5rem; margin-bottom:10px;'>🎓</div>
             <h2 style='color:white; margin:0 0 5px 0; font-size:1.6rem;'>StudyMate Dashboard</h2>
             <p style='color:rgba(255,255,255,0.8); font-size:0.9rem; margin:0 0 30px 0;'>
-                La Martiniere Girls College<br>ICSC Board • Class 8
+                La Martiniere Girls College<br>ICSE Board • Class 8
             </p>
         </div>
     </div>
@@ -198,7 +198,7 @@ if not check_password():
     st.stop()
 
 # ========================================
-# DATA: ICSC Class 8 Chapters
+# DATA: ICSE Class 8 Chapters
 # ========================================
 SUBJECTS = {
     "📖 English Grammar": {
@@ -520,7 +520,7 @@ def generate_chemistry_questions(chapter: str, level: str) -> list:
             f"[{chapter}] Identify acid, base or salt: {random.choice(['HCl','NaOH','NaCl','H₂SO₄','Ca(OH)₂','CH₃COOH'])}. pH > or < 7?",
             f"[{chapter} - {level}] {random.randint(10,50)} g of reactant A and {random.randint(5,30)} g of B react. Product = {random.randint(10,60)} g. Leftover?",
             f"[{chapter}] Name the products when Zn + HCl react. Write balanced equation.",
-            f"[{chapter}] Describe {chapter} with a chemical equation example from ICSC class 8.",
+            f"[{chapter}] Describe {chapter} with a chemical equation example from ICSE class 8.",
             f"[{chapter}] pH of solution = {random.randint(1,14)}. Acidic, basic or neutral?",
             f"[{chapter}] Rate of reaction doubles every 10°C rise. At {random.randint(30,50)}°C it's 1 unit. Rate at {random.randint(50,80)}°C?",
             f"[{chapter} - {level}] A solution has {random.randint(2,10)} g solute in {random.randint(50,200)} mL. Find concentration in g/L.",
@@ -560,7 +560,7 @@ with st.sidebar:
     st.markdown("""
     <div style='background: linear-gradient(135deg,#667eea,#764ba2); padding:15px; border-radius:12px; color:white; text-align:center; margin-bottom:15px;'>
         <h3 style='margin:0; font-size:1.1rem; font-family:"Baloo 2",cursive;'>🎓 La Martiniere Girls</h3>
-        <p style='margin:4px 0 0 0; font-size:0.8rem; opacity:0.85;'>ICSC Board • Class 8</p>
+        <p style='margin:4px 0 0 0; font-size:0.8rem; opacity:0.85;'>ICSE Board • Class 8</p>
     </div>
     """, unsafe_allow_html=True)
 
@@ -661,8 +661,8 @@ with st.sidebar:
 st.markdown("""
 <div class='main-header'>
     <h1>📚 StudyMate Dashboard</h1>
-    <p>ICSC Class 8 • English Medium • La Martiniere Girls College</p>
-    <span class='badge badge-icsc'>ICSC Board</span>
+    <p>ICSE Class 8 • English Medium • La Martiniere Girls College</p>
+    <span class='badge badge-ICSE'>ICSE Board</span>
     <span class='badge badge-class8'>Class 8</span>
 </div>
 """, unsafe_allow_html=True)
@@ -722,7 +722,7 @@ if st.session_state.get("selected_subject"):
     subj_data = SUBJECTS[subj_name]
     
     st.divider()
-    st.markdown(f"### {subj_data['icon']} {subj_name} — Chapters (ICSC Class 8)")
+    st.markdown(f"### {subj_data['icon']} {subj_name} — Chapters (ICSE Class 8)")
     
     # Chapter buttons in rows of 4
     chapters = subj_data["chapters"]
@@ -757,7 +757,7 @@ if st.session_state.get("selected_chapter") and st.session_state.get("selected_s
     
     # ==================== TAB 1: STUDY MATERIAL ====================
     with tabs[0]:
-        search_query = f"ICSC class 8 {subj_name.split(' ',1)[1]} {chapter} notes explanation India"
+        search_query = f"ICSE class 8 {subj_name.split(' ',1)[1]} {chapter} notes explanation India"
         
         col1, col2 = st.columns([3, 2])
         
@@ -827,16 +827,16 @@ if st.session_state.get("selected_chapter") and st.session_state.get("selected_s
                     with st.spinner("🤖 AI is thinking..."):
                         try:
                             client = Groq(api_key=groq_api_key)
-                            prompt = f"""You are an expert ICSC Class 8 English-medium teacher in India.
+                            prompt = f"""You are an expert ICSE Class 8 English-medium teacher in India.
 Topic: {chapter}
 Subject: {subj_name.split(' ',1)[1]}
 
-Write a clear, student-friendly study note ENTIRELY IN ENGLISH for Class 8 ICSC students:
+Write a clear, student-friendly study note ENTIRELY IN ENGLISH for Class 8 ICSE students:
 
 1. 📌 Key Concepts (4-5 bullet points, simple language)
 2. 📚 Important Definitions (2-3 definitions, easy to understand)
 3. 💡 Memory Tips / Mnemonics (to remember easily)
-4. ⭐ Most Important Points for ICSC Exam
+4. ⭐ Most Important Points for ICSE Exam
 5. 📝 2-3 Sample Exam Questions (with answers)
 
 IMPORTANT: Write everything in ENGLISH ONLY. Simple, clear, exam-focused."""
@@ -874,7 +874,7 @@ IMPORTANT: Write everything in ENGLISH ONLY. Simple, clear, exam-focused."""
     # ==================== TAB 2: VIDEOS ====================
     with tabs[1]:
         st.markdown("### 🎥 Video Lessons")
-        yt_query = f"ICSC class 8 {chapter} {subj_name.split(' ',1)[1]} explanation"
+        yt_query = f"ICSE class 8 {chapter} {subj_name.split(' ',1)[1]} explanation"
         
         if st.button("🔍 Find Videos", key="find_videos"):
             with st.spinner("Searching videos..."):
@@ -920,7 +920,7 @@ IMPORTANT: Write everything in ENGLISH ONLY. Simple, clear, exam-focused."""
     # ==================== TAB 3: IMAGES ====================
     with tabs[2]:
         st.markdown("### 🖼️ Diagrams & Images")
-        img_query = f"ICSC class 8 {chapter} diagram textbook India"
+        img_query = f"ICSE class 8 {chapter} diagram textbook India"
         
         if st.button("🔍 Find Diagrams", key="find_images"):
             with st.spinner("Searching images..."):
@@ -984,7 +984,7 @@ body {{ font-family:'Segoe UI',sans-serif; max-width:750px; margin:40px auto; pa
 </style></head><body>
 <div class="header">
   <h1>📓 My Notes — {chapter}</h1>
-  <p>Subject: {subj_name.split(' ',1)[1]} | ICSC Class 8 | La Martiniere Girls</p>
+  <p>Subject: {subj_name.split(' ',1)[1]} | ICSE Class 8 | La Martiniere Girls</p>
 </div>
 <div class="notes">{user_note}</div>
 <div class="footer">Saved on {datetime.now().strftime("%d %b %Y, %I:%M %p")} | StudyMate</div>
@@ -1059,7 +1059,7 @@ body {{ font-family:'Segoe UI',sans-serif; max-width:750px; margin:40px auto; pa
                                 if level == "basic"
                                 else "advanced numerical problems (multi-step, challenging)"
                             )
-                            prompt = f"""You are an expert ICSC Class 8 {subj_name.split(' ',1)[1]} teacher in India.
+                            prompt = f"""You are an expert ICSE Class 8 {subj_name.split(' ',1)[1]} teacher in India.
 
 Generate EXACTLY 10 {level_desc} for chapter: "{chapter}"
 
@@ -1067,7 +1067,7 @@ STRICT RULES:
 - Every question MUST have specific numbers/values (e.g. 45N, ₹500, 20cm)
 - Numerical/calculation based only — NO theory questions
 - All 10 must be different from each other
-- ICSC Class 8 syllabus appropriate
+- ICSE Class 8 syllabus appropriate
 - Use proper units (m, cm, kg, N, ₹, Hz, mol, etc.)
 
 OUTPUT FORMAT — only a numbered list, nothing else:
@@ -1140,7 +1140,7 @@ OUTPUT FORMAT — only a numbered list, nothing else:
                             try:
                                 client = Groq(api_key=groq_api_key)
                                 q_text = "\n".join([f"Q{i+1}. {q}" for i, q in enumerate(questions)])
-                                hint_prompt = f"""You are an ICSC Class 8 {subj_name.split(' ',1)[1]} teacher.
+                                hint_prompt = f"""You are an ICSE Class 8 {subj_name.split(' ',1)[1]} teacher.
 Solve these numerical problems with clear step-by-step working. Write ENTIRELY IN ENGLISH.
 
 {q_text}
@@ -1230,7 +1230,7 @@ Be clear and concise. Show all steps. English only."""
                 with st.spinner("🤖 AI MCQ questions बना रहा है..."):
                     try:
                         client = Groq(api_key=groq_api_key)
-                        mock_prompt = f"""You are an ICSC Class 8 {subj_name.split(' ',1)[1]} teacher creating a mock test.
+                        mock_prompt = f"""You are an ICSE Class 8 {subj_name.split(' ',1)[1]} teacher creating a mock test.
 
 Chapter: {chapter}
 Difficulty: {mock_diff}
@@ -1359,7 +1359,7 @@ if not st.session_state.get("selected_subject"):
         </div>""", unsafe_allow_html=True)
         st.markdown("""<div class='subject-card history-card'>
             <h3>🏛️ History</h3>
-            <p>ICSC Class 8 India & World History</p>
+            <p>ICSE Class 8 India & World History</p>
             <small>12 Chapters</small>
         </div>""", unsafe_allow_html=True)
 
@@ -1435,7 +1435,7 @@ for key in ["selected_subject", "selected_chapter", "text_results", "video_resul
 st.markdown("---")
 st.markdown("""
 <div style='text-align:center; color:#888; font-size:0.85rem; padding:10px;'>
-    Made with ❤️ for <b>La Martiniere Girls College</b> | ICSC Class 8 |
+    Made with ❤️ for <b>La Martiniere Girls College</b> | ICSE Class 8 |
     Powered by <b>Groq llama-3.3-70b + ddgs</b> | Streamlit Cloud Ready 🚀<br>
     <small>📌 Free Resources:
     <a href='https://console.groq.com/keys' target='_blank'>Groq API</a> |
