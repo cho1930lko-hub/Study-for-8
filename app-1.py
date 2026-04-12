@@ -298,22 +298,24 @@ SUBJECTS = {
         ]
     },
     "💻 Computer": {
-        "icon": "💻",
-        "color": "#FF9F43",
-        "card_class": "computer-card",
-        "has_numericals": False,
-        "chapters": [
-            "Introduction to Computers", "Hardware & Software",
-            "Operating System", "Microsoft Word – Advanced",
-            "Microsoft Excel – Spreadsheet Basics",
-            "Microsoft PowerPoint – Presentations",
-            "Internet & Email", "HTML Basics – Web Pages",
-            "Scratch / Logo Programming", "Cyber Safety & Ethics",
-            "Number Systems (Binary, Decimal, Octal, Hexadecimal)",
-            "Data & Information", "Memory & Storage Devices",
-            "Input & Output Devices", "Introduction to Networking"
-        ]
-    }
+       "icon": "💻",
+       "color": "#FF9F43",
+       "card_class": "computer-card",
+       "has_numericals": False,
+       "chapters": [
+           "Operating System",
+           "Computer Networks",
+           "Computational and Algorithmic Thinking",
+           "App Development",
+           "Formulas and Functions in Google Sheets",
+           "Data Visualisation Using Google Sheets",
+           "Fundamentals of Java",
+           "Conditional Statements in Java",
+           "Loops in Java",
+           "Introduction to HTML",
+           "HTML Forms"
+       ]
+    },
 }
 
 # ========================================
