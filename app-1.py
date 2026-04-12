@@ -215,18 +215,32 @@ SUBJECTS = {
         ]
     },
     "➕ Mathematics": {
-        "icon": "➕",
-        "color": "#4ECDC4",
-        "card_class": "maths-card",
-        "has_numericals": True,
-        "chapters": [
-            "Rational Numbers", "Squares & Square Roots", "Cubes & Cube Roots",
-            "Exponents & Powers", "Algebraic Expressions", "Linear Equations in One Variable",
-            "Factorisation", "Understanding Quadrilaterals", "Practical Geometry",
-            "Mensuration", "Data Handling & Graphs", "Introduction to Graphs",
-            "Percentage & its Applications", "Profit, Loss & Discount", "Simple & Compound Interest",
-            "Ratio & Proportion", "Geometry – Lines & Angles", "Congruence of Triangles"
-        ]
+       "icon": "➕",
+       "color": "#4ECDC4",
+       "card_class": "maths-card",
+       "has_numericals": True,
+       "chapters": [
+           "Rational Numbers",
+           "Exponents and Powers",
+           "Squares and Square Roots",
+           "Cubes and Cube Roots",
+           "Playing with Numbers",
+           "Operations on Sets",
+           "Percentage and its Applications",
+           "Simple and Compound Interest",
+           "Direct and Inverse Variation",
+           "Algebraic Expressions and Identities",
+           "Factorisation",
+           "Linear Equations and Inequalities in One Variable",
+           "Understanding Shapes",
+           "Construction of Quadrilaterals",
+           "Circle",
+           "Coordinate System and Graphs",
+           "Symmetry, Reflection and Rotation",
+           "Visualising Solid Shapes",
+           "Mensuration",
+           "Data Handling"
+       ]
     },
     "⚡ Physics": {
         "icon": "⚡",
