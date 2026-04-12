@@ -260,12 +260,12 @@ SUBJECTS = {
         "card_class": "biology-card",
         "has_numericals": False,
         "chapters": [
-            "Cell – Structure & Functions", "Microorganisms: Friend & Foe",
-            "Crop Production & Management", "Conservation of Plants & Animals",
-            "Reproduction in Plants", "Reaching the Age of Adolescence",
-            "Force & Pressure (Life Science)", "Pollution of Air & Water",
+            "Transport of food and minerals in plants", "Reproduction in plants",
+            "Ecosystem", "Endocrine System in Humans",
+            "Adolescence and Accompanying changes", "Circulatory System in Humans",
+            "Nervous System in Humans", "Diseases and First Aid",
             "Food Production & Management", "Human Body Systems",
-            "Animal Reproduction", "Heredity & Evolution (Intro)"
+            "Animal Reproduction"
         ]
     },
     "🏛️ History": {
