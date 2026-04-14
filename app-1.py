@@ -144,10 +144,12 @@ SUBJECTS = {
     },
     "🌍 Geography": {
         "icon":"🌍","color":"#98D8C8","card":"geography-card","num":False,
-        "chapters":["Resources","Land, Soil, Water, Natural Vegetation & Wildlife",
-            "Agriculture","Industries","Human Resources","The Earth & Its Movements",
-            "Latitude & Longitude","Major Landforms of the Earth","Our Country India",
-            "India – Climate, Vegetation & Wildlife","Natural Disasters & Their Management","Map Skills & Globe"]
+        "chapters":["Representation of Geographical Features","Population Dynamics",
+            "Migration","Urbanization","Disasters and their Management",
+            "SOME OTHER NATURAL DISASTERS","WHAT CAUSES THE GROUND TO SHAKE?",
+            "Asia - Location and Physical Features","Asia - Climate and Natural Vegetation",
+            "India - Location and Physical Features","NORTHERN PLAINS - HOW A LANDFORM AFFECTS THE WAY OF LIFE",
+            "India - Climate","India - Flora and Fauna","India - Human Resources"]
     },
     "💻 Computer": {
         "icon":"💻","color":"#FF9F43","card":"computer-card","num":False,
